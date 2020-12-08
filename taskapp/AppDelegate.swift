@@ -7,15 +7,40 @@
 //
 
 import UIKit
+import RealmSwift
+import UserNotifications
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        //このアプリの通知関連の機能を管理する
+        let center = UNUserNotificationCenter.current()
+        //ユーザーに通知、音の使用の許可を求める
+        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+            // Enable or disable features based on authorization
+        }
+        
+        //Realmマイグレーション対応
+        let config = Realm.Configuration(
+            schemaVersion: 1,
+            migrationBlock: { migration, oldSchemaVersion in
+                if (oldSchemaVersion < 1) {}
+        })
+        Realm.Configuration.defaultConfiguration = config
+        
+        center.delegate = self
+        
         return true
+    }
+    
+    //アプリがフォアグラウンドのときに通知を受け取ると呼ばれるメソッド
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void){
+        completionHandler([.alert, .sound])
     }
 
     // MARK: UISceneSession Lifecycle
