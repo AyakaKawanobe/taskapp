@@ -21,6 +21,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //DB内のタスクが格納されているリスト
     //日付の近い順でソート：昇順
     //以降内容をアップデートするとリスト内は自動的に更新される
+    //クラスを値として渡すときは.selfをつける
     var taskArray = try!Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true )
     
     
@@ -93,36 +94,28 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //Deleteボタンが押された時に実行されるメソッド
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
+            //削除するタスクを取得する
+            let task = self.taskArray[indexPath.row]
+            
+            //ローカル通知をキャンセルする
+            let center = UNUserNotificationCenter.current()
+            center.removePendingNotificationRequests(withIdentifiers: [String(task.id)])
+            
             //データベースから削除する
             try! realm.write{
-                //削除するタスクを取得する
-                let task = self.taskArray[indexPath.row]
-                
-                //ローカル通知をキャンセルする
-                let center = UNUserNotificationCenter.current()
-                center.removePendingNotificationRequests(withIdentifiers: [String(task.id)])
-                
-                //データベースから削除する
-                try! realm.write{
-                    self.realm.delete(task)
-                    tableView.deleteRows(at: [indexPath], with: .fade)
-                }
-                
-                //未通知のローカル通知一覧をログ出力
-                center.getPendingNotificationRequests{(requests: [UNNotificationRequest]) in
-                    for request in requests{
-                        print("/------------")
-                        print(request)
-                        print("------------/")
-                    }
-                }
-
-                
-                self.realm.delete(self.taskArray[indexPath.row])
+                self.realm.delete(task)
                 tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+            
+            //未通知のローカル通知一覧をログ出力
+            center.getPendingNotificationRequests{(requests: [UNNotificationRequest]) in
+                for request in requests{
+                    print("/------------")
+                    print(request)
+                    print("------------/")
+                }
             }
         }
     }
-    
 }
 

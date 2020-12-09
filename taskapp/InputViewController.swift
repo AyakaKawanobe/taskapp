@@ -48,6 +48,7 @@ class InputViewController: UIViewController {
     
     //タスク通知を登録する
     func setNotification(task: Task){
+        //通知内容のコンポーネント
         let content = UNMutableNotificationContent()
         //タイトルと内容を設定（中身がない場合はメッセージなしで音だけの通知になるので「（xxなし）」を表示する）
         if task.title == "" {
@@ -73,8 +74,9 @@ class InputViewController: UIViewController {
         //identifier,content,triggerからローカル通知を作成（identifierが同じだとローカル通知を上書き保存）
         let request = UNNotificationRequest(identifier: String(task.id), content: content, trigger: trigger)
         
-        //ローカル通知を登録
+        //通知関連の機能を管理
         let center = UNUserNotificationCenter.current()
+        //ローカル通知を登録
         center.add(request) {(error) in
             //errorがnilなら登録に成功したと表示する。errorが存在すればエラーを表示
             print(error ?? "ローカル通知登録　OK")
