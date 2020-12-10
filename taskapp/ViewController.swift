@@ -9,10 +9,10 @@
 import UIKit
 import RealmSwift
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate{
 
     @IBOutlet weak var tableView: UITableView!
-    
+    @IBOutlet weak var searchBar: UISearchBar!
     
     //Realmのインスタンスを取得
     //try!でtry-catchと省略できる
@@ -30,8 +30,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
-        
-
+        searchBar.delegate = self
     }
 
     //データの数(=セルの数)を返すメソッド
@@ -43,8 +42,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //再利用可能なcellを得る
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        
         //cellに値を設定する
         let task = taskArray[indexPath.row]
+        
         cell.textLabel?.text = task.title
         
         let formatter = DateFormatter()
@@ -53,7 +54,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let dateString:String = formatter.string(from: task.date)
         cell.detailTextLabel?.text = dateString
         
+        
+        
         return cell
+
     }
     
     //各セルを選択した時に実行されるメソッド
@@ -116,6 +120,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 }
             }
         }
+    }
+    
+    //検索ボタン押下時の呼び出しメソッド
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if searchBar.text == ""{
+            taskArray = try!Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true )
+        }else{
+            //タイトル、内容、カテゴリ部分一致検索
+            let predicate = NSPredicate(format: "title CONTAINS %@ OR contents CONTAINS %@ OR category CONTAINS %@", searchBar.text!, searchBar.text!, searchBar.text!)
+            taskArray = realm.objects(Task.self).sorted(byKeyPath: "date", ascending: true ).filter(predicate)
+        }
+
+        //テーブルを再読み込みする。
+        tableView.reloadData()
     }
 }
 

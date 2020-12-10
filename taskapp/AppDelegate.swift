@@ -27,9 +27,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         //Realmマイグレーション対応
         let config = Realm.Configuration(
-            schemaVersion: 1,
+            schemaVersion: 2,
             migrationBlock: { migration, oldSchemaVersion in
-                if (oldSchemaVersion < 1) {}
+                if (oldSchemaVersion < 2) {}
         })
         Realm.Configuration.defaultConfiguration = config
         
