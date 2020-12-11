@@ -65,10 +65,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if modifiedDateString <= nowDatetime && nowDatetime <= dateString{
             cell.backgroundColor = #colorLiteral(red: 0.6257948279, green: 0.9187778234, blue: 0.8746688962, alpha: 1)
         }
-
-        
-        
-        
         
         return cell
 
@@ -152,9 +148,5 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.reloadData()
     }
     
-    //タスク作成画面から戻るsegue
-    @IBAction func unwind(_ segue: UIStoryboardSegue) {
-        
-    }
 }
 
