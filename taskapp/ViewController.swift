@@ -49,10 +49,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.textLabel?.text = task.title
         
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm"
-        
+        //formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "yyyy-MM-dd HH:mm", options: 0, locale: Locale(identifier: "ja_JP"))
         let dateString:String = formatter.string(from: task.date)
         cell.detailTextLabel?.text = dateString
+          
+        //現在日付取得
+        let now = Date()
+        let nowDatetime = formatter.string(from: now)
+        //タスク実行日時の１日前
+        let modifiedDate = Calendar.current.date(byAdding: .day, value: -1, to: task.date)!
+        let modifiedDateString = formatter.string(from: modifiedDate)
+        
+        //タスク実行１日前〜タスク実行日時のセルの背景色を変える
+        if modifiedDateString <= nowDatetime && nowDatetime <= dateString{
+            cell.backgroundColor = #colorLiteral(red: 0.6257948279, green: 0.9187778234, blue: 0.8746688962, alpha: 1)
+        }
+
+        
         
         
         
@@ -127,6 +141,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if searchBar.text == ""{
             taskArray = try!Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true )
         }else{
+//            //categoryに合致
+//            let predicate = NSPredicate(format: category == %@", searchBar.text!)
             //タイトル、内容、カテゴリ部分一致検索
             let predicate = NSPredicate(format: "title CONTAINS %@ OR contents CONTAINS %@ OR category CONTAINS %@", searchBar.text!, searchBar.text!, searchBar.text!)
             taskArray = realm.objects(Task.self).sorted(byKeyPath: "date", ascending: true ).filter(predicate)
@@ -134,6 +150,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
         //テーブルを再読み込みする。
         tableView.reloadData()
+    }
+    
+    //タスク作成画面から戻るsegue
+    @IBAction func unwind(_ segue: UIStoryboardSegue) {
+        
     }
 }
 

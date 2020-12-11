@@ -16,6 +16,7 @@
 		796E07FB257DBC5A00626603 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 796E07F9257DBC5A00626603 /* LaunchScreen.storyboard */; };
 		796E0803257DC59F00626603 /* InputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796E0802257DC59F00626603 /* InputViewController.swift */; };
 		796E0807257F19E200626603 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796E0806257F19E200626603 /* Task.swift */; };
+		79C09C9F258340D600E3178D /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C09C9E258340D600E3178D /* CategoryViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		796E07FC257DBC5A00626603 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		796E0802257DC59F00626603 /* InputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputViewController.swift; sourceTree = "<group>"; };
 		796E0806257F19E200626603 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		79C09C9E258340D600E3178D /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		DDA642361C5A69BC34556566 /* Pods-taskapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-taskapp.debug.xcconfig"; path = "Target Support Files/Pods-taskapp/Pods-taskapp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -88,6 +90,7 @@
 				796E07F0257DBC5900626603 /* SceneDelegate.swift */,
 				796E07F2257DBC5900626603 /* ViewController.swift */,
 				796E0802257DC59F00626603 /* InputViewController.swift */,
+				79C09C9E258340D600E3178D /* CategoryViewController.swift */,
 				796E07F4257DBC5900626603 /* Main.storyboard */,
 				796E07F7257DBC5A00626603 /* Assets.xcassets */,
 				796E0806257F19E200626603 /* Task.swift */,
@@ -216,6 +219,7 @@
 				796E07EF257DBC5900626603 /* AppDelegate.swift in Sources */,
 				796E0807257F19E200626603 /* Task.swift in Sources */,
 				796E07F1257DBC5900626603 /* SceneDelegate.swift in Sources */,
+				79C09C9F258340D600E3178D /* CategoryViewController.swift in Sources */,
 				796E0803257DC59F00626603 /* InputViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

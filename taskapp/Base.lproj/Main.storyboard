@@ -119,8 +119,8 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="jfY-Z3-AHH">
-                                <rect key="frame" x="9" y="414" width="394" height="120"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="jfY-Z3-AHH">
+                                <rect key="frame" x="10" y="279" width="394" height="120"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="120" id="5lc-ae-Yfb"/>
@@ -135,6 +135,26 @@
                                     <constraint firstAttribute="height" constant="120" id="QAq-ru-BkC"/>
                                 </constraints>
                             </datePicker>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oHf-v6-tJ8">
+                                <rect key="frame" x="167" y="659" width="80" height="30"/>
+                                <color key="backgroundColor" red="0.0" green="0.32852089410000002" blue="0.57488495110000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="fZw-Ko-NKE"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="保存">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="saveButton:" destination="AvL-co-sEo" eventType="touchUpInside" id="zBQ-wB-Fsq"/>
+                                    <segue destination="awJ-Ge-Lme" kind="unwind" unwindAction="unwind:" id="9wM-e8-yct"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
@@ -154,8 +174,10 @@
                             <constraint firstItem="9f9-zs-9AX" firstAttribute="leading" secondItem="fpY-h4-En1" secondAttribute="leading" id="Xgv-cy-v4r"/>
                             <constraint firstItem="jfY-Z3-AHH" firstAttribute="leading" secondItem="fpY-h4-En1" secondAttribute="leading" constant="10" id="kXM-MU-88L"/>
                             <constraint firstItem="Rb3-Ak-l3e" firstAttribute="top" secondItem="hwT-XV-N4b" secondAttribute="bottom" constant="10" id="kd3-hT-hbE"/>
+                            <constraint firstItem="oHf-v6-tJ8" firstAttribute="centerX" secondItem="XKV-Zg-Utv" secondAttribute="centerX" id="ntR-sI-PQp"/>
                             <constraint firstItem="fpY-h4-En1" firstAttribute="trailing" secondItem="3Mp-pM-2Ti" secondAttribute="trailing" constant="10" id="rq9-Ig-QJV"/>
                             <constraint firstItem="9f9-zs-9AX" firstAttribute="top" secondItem="jfY-Z3-AHH" secondAttribute="bottom" constant="10" id="sZB-IB-3Zw"/>
+                            <constraint firstItem="oHf-v6-tJ8" firstAttribute="top" secondItem="9f9-zs-9AX" secondAttribute="bottom" constant="130" id="tbS-rp-V1E"/>
                             <constraint firstItem="3Mp-pM-2Ti" firstAttribute="leading" secondItem="fpY-h4-En1" secondAttribute="leading" constant="10" id="uAa-hD-Gap"/>
                             <constraint firstItem="fpY-h4-En1" firstAttribute="trailing" secondItem="hwT-XV-N4b" secondAttribute="trailing" constant="10" id="wdG-GR-X84"/>
                             <constraint firstItem="LMg-ff-ZPJ" firstAttribute="top" secondItem="3Mp-pM-2Ti" secondAttribute="bottom" constant="10" id="wnx-xt-QNF"/>
@@ -171,8 +193,9 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hfe-YP-PC9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="awJ-Ge-Lme" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1836" y="138"/>
+            <point key="canvasLocation" x="1834.7826086956522" y="137.94642857142856"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="W9J-W0-GRb">

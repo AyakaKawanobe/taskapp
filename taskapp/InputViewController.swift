@@ -36,9 +36,8 @@ class InputViewController: UIViewController {
         categoryTextField.text = task.category
     }
     
-    //animatedは遷移の際にアニメーションをつけるか否か
-    //segueでの遷移の場合は基本trueが入っている
-    override func viewWillDisappear(_ animated: Bool) {
+    //保存ボタンを押したときの処理
+    @IBAction func saveButton(_ sender: Any) {
         try! realm.write{
             self.task.title = self.titleTextField.text!
             self.task.contents = self.contentsTextView.text
@@ -47,7 +46,11 @@ class InputViewController: UIViewController {
             self.realm.add(self.task, update: .modified)
         }
         setNotification(task: task)
-        
+    }
+    
+    //    animatedは遷移の際にアニメーションをつけるか否か
+    //    segueでの遷移の場合は基本trueが入っている
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
     
