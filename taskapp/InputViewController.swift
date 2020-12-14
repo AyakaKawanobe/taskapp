@@ -22,7 +22,9 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     //カテゴリPicerView処理
     var pickerView = UIPickerView()
-    var categoryList = ["仕事","買い物","掃除"]
+    //var categoryList = ["仕事","買い物","掃除"]
+    var categoryArray = try!Realm().objects(Category.self)
+    var category: Category!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,10 +39,10 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         
         //決定バーの生成
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 35))
-        let editItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: nil)
+        //let editItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(edit))
         let spaceItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         let doneItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
-        toolbar.setItems([editItem, spaceItem, doneItem], animated: true)
+        toolbar.setItems([spaceItem, doneItem], animated: true)
         
         //インプットビュー設定
         categoryTextField.inputView = pickerView
@@ -49,7 +51,7 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         titleTextField.text = task.title
         contentsTextView.text = task.contents
         datePicker.date = task.date
-        categoryTextField.text = task.category
+        categoryTextField.text = category.categoryName
     }
     
 //    // 決定ボタン押下
@@ -66,23 +68,31 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     // ドラムロールの行数
      func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-         return categoryList.count
+        print(categoryArray)
+         return categoryArray.count
      }
     
     // ドラムロールの各タイトル
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return categoryList[row]
+        let category = categoryArray[row]
+        return category.categoryName
     }
     
     //選択したカテゴリをtextFieldに入力
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        categoryTextField.text = categoryList[row]
+        let category = categoryArray[row]
+        categoryTextField.text = category.categoryName
     }
     
-    //PickerViewを閉じる
+    //Doneボタンが押されたらPickerViewを閉じる
     @objc func done() {
         view.endEditing(true)
     }
+    
+//    //Editボタンが押されたらカテゴリ編集画面に遷移
+//    @objc func edit(){
+//       performSegue(withIdentifier: "editSegue", sender: nil)
+//    }
     
     //保存ボタンを押したときの処理
     @IBAction func saveButton(_ sender: Any) {
@@ -90,7 +100,7 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             self.task.title = self.titleTextField.text!
             self.task.contents = self.contentsTextView.text
             self.task.date = self.datePicker.date
-            self.task.category = self.categoryTextField.text!
+            self.category.categoryName = self.categoryTextField.text!
             self.realm.add(self.task, update: .modified)
         }
         setNotification(task: task)
@@ -105,6 +115,17 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 //    override func viewWillDisappear(_ animated: Bool) {
 //        super.viewWillDisappear(animated)
 //    }
+    
+    //カテゴリ追加ボタンを押下
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let categoryViewController: CategoryViewController = segue.destination as! CategoryViewController
+        let category = Category()
+        let allCategory = realm.objects(Category.self)
+        if allCategory.count != 0{
+            category.categoryId = allCategory.max(ofProperty: "categoryId")! + 1
+        }
+        categoryViewController.category = category
+    }
     
     //タスク通知を登録する
     func setNotification(task: Task){
@@ -156,6 +177,9 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     @objc func dismissKeyboard(){
         //キーボードを閉じる
         view.endEditing(true)
+    }
+    
+    @IBAction func unwind(_ segue: UIStoryboardSegue) {
     }
     
 

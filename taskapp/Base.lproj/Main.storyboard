@@ -16,7 +16,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="tN9-e0-k6Y">
-                                <rect key="frame" x="0.0" y="144" width="414" height="718"/>
+                                <rect key="frame" x="0.0" y="184" width="414" height="678"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" textLabel="0QY-F5-KC0" detailTextLabel="cuT-w2-afq" style="IBUITableViewCellStyleSubtitle" id="zN6-gc-QwD">
@@ -53,16 +53,27 @@
                                     <string>Title</string>
                                 </scopeButtonTitles>
                             </searchBar>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="▼カテゴリ絞り込み" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="P6m-cQ-ZAA">
+                                <rect key="frame" x="0.0" y="144" width="414" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="WFl-E5-2Bw"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="vP5-h7-x9z" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="DeG-Mr-TML"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="tN9-e0-k6Y" secondAttribute="trailing" id="Gc5-Yr-JQq"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="tN9-e0-k6Y" secondAttribute="bottom" id="Jqx-K3-saS"/>
+                            <constraint firstItem="P6m-cQ-ZAA" firstAttribute="top" secondItem="vP5-h7-x9z" secondAttribute="bottom" id="Pnl-vN-qN2"/>
+                            <constraint firstItem="tN9-e0-k6Y" firstAttribute="top" secondItem="P6m-cQ-ZAA" secondAttribute="bottom" id="Rls-HU-t1z"/>
                             <constraint firstItem="vP5-h7-x9z" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Ucn-Bi-DfU"/>
-                            <constraint firstItem="tN9-e0-k6Y" firstAttribute="top" secondItem="vP5-h7-x9z" secondAttribute="bottom" id="aDC-B5-2Hl"/>
                             <constraint firstItem="vP5-h7-x9z" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="bup-4P-plb"/>
+                            <constraint firstItem="P6m-cQ-ZAA" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="oqE-sW-LaY"/>
                             <constraint firstItem="tN9-e0-k6Y" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="rMq-ee-VfS"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="P6m-cQ-ZAA" secondAttribute="trailing" id="vMt-6G-9R3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -74,6 +85,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="categoryTextField" destination="P6m-cQ-ZAA" id="Zq7-dD-SHL"/>
                         <outlet property="searchBar" destination="vP5-h7-x9z" id="D0h-Ho-rgg"/>
                         <outlet property="tableView" destination="tN9-e0-k6Y" id="4ae-jx-tst"/>
                         <segue destination="AvL-co-sEo" kind="show" identifier="cellSegue" id="SoK-0Z-ZOA"/>
@@ -131,10 +143,10 @@
                                 </constraints>
                             </datePicker>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w9D-Rb-fYa">
-                                <rect key="frame" x="338" y="173" width="66" height="30"/>
-                                <state key="normal" title="編集/追加"/>
+                                <rect key="frame" x="312" y="173" width="92" height="30"/>
+                                <state key="normal" title="カテゴリ追加"/>
                                 <connections>
-                                    <segue destination="ENp-Il-pl7" kind="show" id="aYA-e9-NP0"/>
+                                    <segue destination="SWJ-5b-XG2" kind="show" id="bU5-Lg-yXT"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zIe-5U-hjQ">
@@ -194,19 +206,49 @@
             </objects>
             <point key="canvasLocation" x="1834.7826086956522" y="137.94642857142856"/>
         </scene>
-        <!--カテゴリ編集-->
-        <scene sceneID="Q1O-lb-Nhw">
+        <!--Category View Controller-->
+        <scene sceneID="tLV-3M-CpB">
             <objects>
-                <viewController id="ENp-Il-pl7" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="SbU-hE-kFH">
+                <viewController id="SWJ-5b-XG2" customClass="CategoryViewController" customModule="taskapp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="h8L-Gv-hzU">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="　カテゴリ名" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gV3-XZ-TVB">
+                                <rect key="frame" x="0.0" y="188" width="414" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="Xu6-VC-h8t"/>
+                                </constraints>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yJf-al-hK3">
+                                <rect key="frame" x="192" y="418" width="31" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="保存"/>
+                                <connections>
+                                    <action selector="saveButton:" destination="SWJ-5b-XG2" eventType="touchUpInside" id="arT-x3-FPm"/>
+                                    <segue destination="L0R-Kh-Eyd" kind="unwind" unwindAction="unwind:" id="cnf-pm-BX0"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="Zyb-D3-97L"/>
+                        <constraints>
+                            <constraint firstItem="gEW-lv-hqe" firstAttribute="trailing" secondItem="gV3-XZ-TVB" secondAttribute="trailing" id="DDl-YJ-so9"/>
+                            <constraint firstItem="gV3-XZ-TVB" firstAttribute="top" secondItem="gEW-lv-hqe" secondAttribute="top" constant="100" id="Iyl-l1-lJG"/>
+                            <constraint firstItem="gV3-XZ-TVB" firstAttribute="centerX" secondItem="h8L-Gv-hzU" secondAttribute="centerX" id="JU2-3y-kPT"/>
+                            <constraint firstItem="gV3-XZ-TVB" firstAttribute="leading" secondItem="gEW-lv-hqe" secondAttribute="leading" id="YYq-Mn-vjr"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="gEW-lv-hqe"/>
                     </view>
-                    <navigationItem key="navigationItem" title="カテゴリ編集" id="wgC-jJ-lsO"/>
+                    <navigationItem key="navigationItem" id="zHw-Zz-lpS"/>
+                    <connections>
+                        <outlet property="categoryTextField" destination="gV3-XZ-TVB" id="H0e-i5-Muc"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="rMS-cP-gYT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aFr-EF-aeM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="L0R-Kh-Eyd" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2710" y="138"/>
         </scene>
