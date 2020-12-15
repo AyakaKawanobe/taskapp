@@ -16,7 +16,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var categoryTextField: UITextField!
     
     //Realmのインスタンスを取得
-    //try!でtry-catchと省略できる
     let realm = try! Realm()
     
     //カテゴリPicerView処理
@@ -34,7 +33,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
@@ -45,20 +44,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         //決定バーの生成
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 35))
-        let editItem = UIBarButtonItem(title: "Reset", style: .done, target: self, action: #selector(reset))
+        let editItem = UIBarButtonItem(title: "リセット", style: .done, target: self, action: #selector(reset))
         let spaceItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-        let doneItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        let doneItem = UIBarButtonItem(title: "選択", style: .done, target: self, action: #selector(done))
         toolbar.setItems([editItem, spaceItem, doneItem], animated: true)
         
         //インプットビュー設定
         categoryTextField.inputView = pickerView
         categoryTextField.inputAccessoryView = toolbar
         
-//        //PickerViewに空行を入れる
-//        try! realm.write{
-//            categoryArray[catgoryRow].categoryName = ""
-//            self.realm.add(categoryArray, update: .modified)
-//        }
+        //Backボタン文言変更
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "戻る", style: .plain, target: nil, action: nil)
+        
     }
 
     //データの数(=セルの数)を返すメソッド
@@ -68,14 +65,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     //各セルの内容を返すメソッド
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        taskRow = indexPath.row
+        
         //再利用可能なcellを得る
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         
-        taskRow = indexPath.row
-        
         //cellに値を設定する
         let task = taskArray[indexPath.row]
-        
         cell.textLabel?.text = task.title
         
         let formatter = DateFormatter()
@@ -104,12 +100,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "cellSegue", sender: nil)
     }
-    
-//    // クリアボタンが押された時の処理
-//    func textFieldShouldClear(_ textField: UITextField) -> Bool {
-//
-//        return true
-//    }
     
     //segueで画面遷移するときに呼ばれる
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -142,6 +132,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //セルの削除が可能なことを伝えるメソッド
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .delete
+    }
+    
+    //deleteボタン文言変更
+    func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        return "削除"
     }
     
     //Deleteボタンが押された時に実行されるメソッド

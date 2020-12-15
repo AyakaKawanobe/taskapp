@@ -22,7 +22,6 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     //カテゴリPicerView処理
     var pickerView = UIPickerView()
-    //var categoryList = ["仕事","買い物","掃除"]
     var categoryArray = try!Realm().objects(Category.self)
     var category: Category!
     
@@ -39,36 +38,28 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         
         //決定バーの生成
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 35))
-        //let editItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(edit))
         let spaceItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-        let doneItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        let doneItem = UIBarButtonItem(title: "選択", style: .done, target: self, action: #selector(done))
         toolbar.setItems([spaceItem, doneItem], animated: true)
         
         //インプットビュー設定
         categoryTextField.inputView = pickerView
         categoryTextField.inputAccessoryView = toolbar
+
+        //枠線指定
+        contentsTextView.layer.borderColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        contentsTextView.layer.borderWidth = 1.0
+        contentsTextView.layer.cornerRadius = 8.0
         
+        //Backボタン文言変更
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "戻る", style: .plain, target: nil, action: nil)
+        
+        //タスク内容表示
         titleTextField.text = task.title
         contentsTextView.text = task.contents
         datePicker.date = task.date
         categoryTextField.text = task.category
-        
-//        //PickerViewに空行を入れる
-//        try! realm.write{
-//            self.category.categoryId = 0
-//            self.category.categoryName = ""
-//            self.realm.add(self.category, update: .modified)
-//        }
-        
-        
     }
-    
-//    // 決定ボタン押下
-//    @objc func done() {
-//        categoryTextField.endEditing(true)
-//        categoryTextField.text = "\(categoryList[pickerView.selectedRow(inComponent: 0)])"
-//    }
-    
     
     //ドラムロールの列数
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -106,10 +97,7 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             self.task.date = self.datePicker.date
             self.category.categoryName = self.categoryTextField.text!
             self.task.category = self.categoryTextField.text!
-            //print(task.category)
-            //self.realm.add(self.category, update: .modified)
             self.realm.add(self.task, update: .modified)
-            print(task!)
             
         }
         setNotification(task: task)
@@ -125,7 +113,7 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 //        super.viewWillDisappear(animated)
 //    }
     
-    //カテゴリ追加ボタンを押下
+    //カテゴリ編集/追加ボタンを押下
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let categoryViewController: CategoryViewController = segue.destination as! CategoryViewController
         let category = Category()
@@ -187,11 +175,8 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         //キーボードを閉じる
         view.endEditing(true)
     }
-    
+
     @IBAction func unwind(_ segue: UIStoryboardSegue) {
+        
     }
-    
-
-    
-
 }

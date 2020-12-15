@@ -14,19 +14,19 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
     let realm = try! Realm()
     var category: Category!
     let categoryArray = try!Realm().objects(Category.self)
+    let taskArray = try!Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true )
     
     @IBOutlet weak var tableView: UITableView!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        tableView.delegate = self
-        tableView.dataSource = self
-        
-    }
-    
     @IBOutlet weak var categoryTextField: UITextField!
         
+    override func viewDidLoad() {
+           super.viewDidLoad()
+
+           tableView.delegate = self
+           tableView.dataSource = self
+           
+       }
+    
     //保存ボタンを押したときの処理
     @IBAction func saveButton(_ sender: Any) {
         print(category.categoryId)
@@ -48,7 +48,6 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
         
         //cellに値を設定する
         let category = categoryArray[indexPath.row]
-        
         cell.textLabel?.text = category.categoryName
     
         return cell
@@ -57,6 +56,11 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
     //セルの削除が可能なことを伝えるメソッド
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .delete
+    }
+    
+    //deleteボタン文言変更
+    func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        return "削除"
     }
     
     //Deleteボタンが押された時に実行されるメソッド
