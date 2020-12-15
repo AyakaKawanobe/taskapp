@@ -22,6 +22,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //カテゴリPicerView処理
     var pickerView = UIPickerView()
     var categoryArray = try!Realm().objects(Category.self)
+    var catgoryRow = 0
+    var taskRow = 0
     
     //DB内のタスクが格納されているリスト
     //日付の近い順でソート：昇順
@@ -43,14 +45,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         //決定バーの生成
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 35))
-        //let editItem = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(edit))
+        let editItem = UIBarButtonItem(title: "Reset", style: .done, target: self, action: #selector(reset))
         let spaceItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         let doneItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
-        toolbar.setItems([spaceItem, doneItem], animated: true)
+        toolbar.setItems([editItem, spaceItem, doneItem], animated: true)
         
         //インプットビュー設定
         categoryTextField.inputView = pickerView
         categoryTextField.inputAccessoryView = toolbar
+        
+//        //PickerViewに空行を入れる
+//        try! realm.write{
+//            categoryArray[catgoryRow].categoryName = ""
+//            self.realm.add(categoryArray, update: .modified)
+//        }
     }
 
     //データの数(=セルの数)を返すメソッド
@@ -62,6 +70,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //再利用可能なcellを得る
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        
+        taskRow = indexPath.row
         
         //cellに値を設定する
         let task = taskArray[indexPath.row]
@@ -94,6 +104,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "cellSegue", sender: nil)
     }
+    
+//    // クリアボタンが押された時の処理
+//    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+//
+//        return true
+//    }
     
     //segueで画面遷移するときに呼ばれる
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -172,7 +188,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.reloadData()
     }
     
-    //カテゴリ絞り込み
     //ドラムロールの列数
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -187,32 +202,48 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // ドラムロールの各タイトル
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         let category = categoryArray[row]
+        print(category)
         return category.categoryName
     }
     
-    //選択したカテゴリをtextFieldに入力
+    //該当カテゴリのタスクを表示
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let category = categoryArray[row]
-        categoryTextField.text = category.categoryName
-        print(category)
-//        let categoryPredicate = NSPredicate(format: "categoryName == %@", category.categoryName)
-//        categoryArray = realm.objects(Category.self).filter(categoryPredicate)
-        let taskPredicate = NSPredicate(format: "category == %@", category)
-        taskArray = realm.objects(Task.self).sorted(byKeyPath: "date", ascending: true ).filter(taskPredicate)
-        print(taskArray)
-        //テーブルを再読み込みする。
-        tableView.reloadData()
+        self.catgoryRow = row
     }
     
-    //Doneボタンが押されたら該当カテゴリでセルを絞り込み
+    //Doneボタンが押されたらタスク絞り込み
     @objc func done() {
+        //PickerView閉じる
         view.endEditing(true)
-//        let categoryPredicate = NSPredicate(format: "categoryName == %@", categoryTextField.text!)
-//        categoryArray = realm.objects(Category.self).filter(categoryPredicate)
-//        let taskPredicate = NSPredicate(format: "category == %@", categoryArray)
-//        taskArray = realm.objects(Task.self).sorted(byKeyPath: "date", ascending: true ).filter(taskPredicate)
-//        //テーブルを再読み込みする。
-//        tableView.reloadData()
+        
+        let category = categoryArray[catgoryRow]
+        let task = taskArray[taskRow]
+        
+        categoryTextField.text = task.category
+        
+        //
+//        if categoryTextField.text == ""{
+//            taskArray = try!Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true )
+//        }else{
+            let taskPredicate = NSPredicate(format: "category == %@", category.categoryName)
+            taskArray = realm.objects(Task.self).sorted(byKeyPath: "date", ascending: true ).filter(taskPredicate)
+//        }
+        //テーブルを再読み込みする。
+        tableView.reloadData()
+        
+    }
+    
+    //リセットボタンが押されたら全件表示に戻す
+    @objc func reset(){
+        //PickerView閉じる
+        view.endEditing(true)
+        
+        categoryTextField.text = ""
+        
+        taskArray = try!Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true )
+        //テーブルを再読み込みする。
+        tableView.reloadData()
+        
     }
     
 }

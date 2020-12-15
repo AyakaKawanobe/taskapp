@@ -9,15 +9,19 @@
 import UIKit
 import RealmSwift
 
-class CategoryViewController: UIViewController {
+class CategoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     let realm = try! Realm()
     var category: Category!
+    let categoryArray = try!Realm().objects(Category.self)
+    
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        tableView.delegate = self
+        tableView.dataSource = self
         
     }
     
@@ -31,7 +35,42 @@ class CategoryViewController: UIViewController {
             self.realm.add(self.category, update: .modified)
         }
     }
- 
     
-
+    //データの数(=セルの数)を返すメソッド
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return categoryArray.count
+    }
+ 
+    //各セルの内容を返すメソッド
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        //再利用可能なcellを得る
+        let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
+        
+        //cellに値を設定する
+        let category = categoryArray[indexPath.row]
+        
+        cell.textLabel?.text = category.categoryName
+    
+        return cell
+    }
+    
+    //セルの削除が可能なことを伝えるメソッド
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
+    
+    //Deleteボタンが押された時に実行されるメソッド
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete{
+            //削除するタスクを取得する
+            let category = self.categoryArray[indexPath.row]
+            
+            //データベースから削除する
+            try! realm.write{
+                self.realm.delete(category)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+        }
+    }
+    
 }

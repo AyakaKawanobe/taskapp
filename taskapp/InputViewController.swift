@@ -51,7 +51,16 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         titleTextField.text = task.title
         contentsTextView.text = task.contents
         datePicker.date = task.date
-        categoryTextField.text = category.categoryName
+        categoryTextField.text = task.category
+        
+//        //PickerViewに空行を入れる
+//        try! realm.write{
+//            self.category.categoryId = 0
+//            self.category.categoryName = ""
+//            self.realm.add(self.category, update: .modified)
+//        }
+        
+        
     }
     
 //    // 決定ボタン押下
@@ -89,11 +98,6 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         view.endEditing(true)
     }
     
-//    //Editボタンが押されたらカテゴリ編集画面に遷移
-//    @objc func edit(){
-//       performSegue(withIdentifier: "editSegue", sender: nil)
-//    }
-    
     //保存ボタンを押したときの処理
     @IBAction func saveButton(_ sender: Any) {
         try! realm.write{
@@ -101,7 +105,12 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             self.task.contents = self.contentsTextView.text
             self.task.date = self.datePicker.date
             self.category.categoryName = self.categoryTextField.text!
+            self.task.category = self.categoryTextField.text!
+            //print(task.category)
+            //self.realm.add(self.category, update: .modified)
             self.realm.add(self.task, update: .modified)
+            print(task!)
+            
         }
         setNotification(task: task)
         
