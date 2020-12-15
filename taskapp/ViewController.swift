@@ -30,6 +30,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //クラスを値として渡すときは.selfをつける
     var taskArray = try!Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true )
     
+    //BarButtonItemの生成
+    let resetItem = UIBarButtonItem(title: "リセット", style: .done, target: self, action: #selector(reset))
+    let spaceItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+    let doneItem = UIBarButtonItem(title: "選択", style: .done, target: self, action: #selector(done))
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,12 +47,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         pickerView.delegate = self
         pickerView.dataSource = self
         
+        if taskArray.count <= 1 && categoryArray.count <= 1{
+                   doneItem.isEnabled = false
+        }
+        
         //決定バーの生成
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 35))
-        let editItem = UIBarButtonItem(title: "リセット", style: .done, target: self, action: #selector(reset))
-        let spaceItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-        let doneItem = UIBarButtonItem(title: "選択", style: .done, target: self, action: #selector(done))
-        toolbar.setItems([editItem, spaceItem, doneItem], animated: true)
+        toolbar.setItems([resetItem, spaceItem, doneItem], animated: true)
         
         //インプットビュー設定
         categoryTextField.inputView = pickerView
@@ -60,6 +66,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     //データの数(=セルの数)を返すメソッド
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        //pickerViewの選択ボタンを活性化
+        if taskArray.count > 1 && categoryArray.count > 1{
+            doneItem.isEnabled = true
+        }
+        
+        //pickerViewの選択ボタンを非活性化
+        if taskArray.count <= 1 || categoryArray.count <= 1{
+            doneItem.isEnabled = false
+        }
         return taskArray.count
     }
     
@@ -190,7 +205,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // ドラムロールの行数
      func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        print(categoryArray)
          return categoryArray.count
      }
     
