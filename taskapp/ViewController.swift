@@ -21,7 +21,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //カテゴリPicerView処理
     var pickerView = UIPickerView()
     var categoryArray = try!Realm().objects(Category.self)
-    var catgoryRow = 0
+    var categoryRow = 0
     var taskRow = 0
     
     //DB内のタスクが格納されているリスト
@@ -124,7 +124,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if segue.identifier == "cellSegue"{
             let indexPath = self.tableView.indexPathForSelectedRow
             inputViewController.task = taskArray[indexPath!.row]
-            inputViewController.category = categoryArray[indexPath!.row]
+            //inputViewController.category = categoryArray[indexPath!.row]
+            //inputViewController.category = categoryArray
+            inputViewController.taskRow = taskRow
+            inputViewController.categoryRow = categoryRow
         }else{
             //+ボタンを押下したときの処理
             let task =  Task()
@@ -188,7 +191,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }else{
 //            //categoryに合致
 //            let predicate = NSPredicate(format: category == %@", searchBar.text!)
-            //タイトル、内容、カテゴリ部分一致検索
+            //タイトル、内容、部分一致検索
             let predicate = NSPredicate(format: "title CONTAINS %@ OR contents CONTAINS %@", searchBar.text!, searchBar.text!)
             taskArray = realm.objects(Task.self).sorted(byKeyPath: "date", ascending: true ).filter(predicate)
             print(taskArray)
@@ -217,26 +220,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     //該当カテゴリのタスクを表示
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        self.catgoryRow = row
+        self.categoryRow = row
     }
     
-    //Doneボタンが押されたらタスク絞り込み
+    //選択ボタンが押されたときの処理
     @objc func done() {
         //PickerView閉じる
         view.endEditing(true)
+
+        //カテゴリテキストフィールドに選択したカテゴリを表示
+        categoryTextField.text = categoryArray[categoryRow].categoryName
         
-        let category = categoryArray[catgoryRow]
-        let task = taskArray[taskRow]
-        
-        categoryTextField.text = task.category
-        
-        //
-//        if categoryTextField.text == ""{
-//            taskArray = try!Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true )
-//        }else{
-            let taskPredicate = NSPredicate(format: "category == %@", category.categoryName)
+        //タスク絞り込み
+        let taskPredicate = NSPredicate(format: "category == %@", categoryArray[categoryRow])
             taskArray = realm.objects(Task.self).sorted(byKeyPath: "date", ascending: true ).filter(taskPredicate)
-//        }
+
         //テーブルを再読み込みする。
         tableView.reloadData()
         

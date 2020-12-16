@@ -25,6 +25,9 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     var categoryArray = try!Realm().objects(Category.self)
     var category: Category!
     
+    var categoryRow = 0
+    var taskRow = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -54,11 +57,10 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         //Backボタン文言変更
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "戻る", style: .plain, target: nil, action: nil)
         
-        //タスク内容表示
         titleTextField.text = task.title
         contentsTextView.text = task.contents
         datePicker.date = task.date
-        categoryTextField.text = task.category
+        categoryTextField.text = task.category?.categoryName
     }
     
     //ドラムロールの列数
@@ -75,13 +77,17 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     // ドラムロールの各タイトル
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         let category = categoryArray[row]
+        print(categoryArray[row])
         return category.categoryName
     }
     
     //選択したカテゴリをtextFieldに入力
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        categoryRow = row
         let category = categoryArray[row]
+        print(category.categoryName)
         categoryTextField.text = category.categoryName
+        
     }
     
     //Doneボタンが押されたらPickerViewを閉じる
@@ -95,10 +101,9 @@ class InputViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             self.task.title = self.titleTextField.text!
             self.task.contents = self.contentsTextView.text
             self.task.date = self.datePicker.date
-            self.category.categoryName = self.categoryTextField.text!
-            self.task.category = self.categoryTextField.text!
+            //self.category.categoryName = self.categoryTextField.text!
+            self.task.category = self.categoryArray[categoryRow]
             self.realm.add(self.task, update: .modified)
-            
         }
         setNotification(task: task)
         
